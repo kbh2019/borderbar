@@ -1,0 +1,22 @@
+function onOpen(e){
+  return SpreadsheetApp.getUi().createAddonMenu()
+  .addItem('Show border sidebar','showBorderSidebar').addToUi()
+}//onOpen
+
+function showBorderSidebar(){
+  var buttons = {
+    //DEFINE THE STYLES YOU WANT HERE
+    'Red Dashed Top and Bottom' : 'true,false,true,false,false,false,\'RED\',\'DASHED\'',
+    'Red Solid Left and Right'  : 'false,true,false,true,false,false,\'RED\',\'SOLID\'',
+  };//buttons
+  var html = Object.keys(buttons).reduce(function(a,x){
+    return a+'<div><button onclick="google.script.run.applyBorder('+buttons[x]+')">'+x+'</button></div>';
+  },'');//reduce
+  html = HtmlService.createHtmlOutput(html).setTitle('Border sidebar');
+  SpreadsheetApp.getUi().showSidebar(html);
+}//showBorderSidebar
+
+function applyBorder(top,left,bottom,right,vertical,horizontal,color,style){
+  var ranges = SpreadsheetApp.getActiveSheet().getSelection().getActiveRangeList();
+  ranges.setBorder(top,left,bottom,right,vertical,horizontal,color,SpreadsheetApp.BorderStyle[style]);
+}//applyBorder
